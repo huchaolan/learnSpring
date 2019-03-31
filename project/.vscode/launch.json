@@ -1,0 +1,11 @@
+{
+	"configurations": [
+		{
+			"type": "java",
+			"name": "CodeLens (Launch) - ConntionDBDemo",
+			"request": "launch",
+			"mainClass": "spring.jdbcdemo.learnjdbc.connectiondb.ConntionDBDemo",
+			"projectName": "learnjdbc"
+		}
+	]
+}

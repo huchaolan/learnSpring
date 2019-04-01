@@ -24,6 +24,10 @@ public class JDBCDao {
 	public <T> List<T> test1(String sql,RowMapper<T> rowMapper) {
 		return jdbcop.query(sql, rowMapper);
 	}
+
+	public int update(String sql) {
+		return jdbcop.update(sql);
+	}
 	
 
 }

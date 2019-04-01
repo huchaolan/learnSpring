@@ -6,6 +6,8 @@ import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import spring.jdbcdemo.learnjdbc.connectiondb.jdbcdao.JDBCDao;
 
@@ -16,13 +18,25 @@ import spring.jdbcdemo.learnjdbc.connectiondb.jdbcdao.JDBCDao;
 public class CommonConfig {
 
 	@Bean
+	public TransactionTemplate  transactionTemplate () {
+		TransactionTemplate txtemplate =  new TransactionTemplate();
+		txtemplate.setTransactionManager(transactionManager());
+		return txtemplate;
+	}
+	@Bean
+	public DataSourceTransactionManager transactionManager(){
+		DataSourceTransactionManager txmanager = new DataSourceTransactionManager();
+		txmanager.setDataSource(dataSource());
+		return txmanager;
+	}
+	@Bean
 	public JDBCDao jdbcDao() {
 		return new JDBCDao();
 	}
 
 	@Bean
-	public JdbcTemplate jdbcTemplate(DataSource ds) {
-		return new JdbcTemplate(ds);
+	public JdbcTemplate jdbcTemplate() {
+		return new JdbcTemplate(dataSource());
 	}
 
 	@Bean

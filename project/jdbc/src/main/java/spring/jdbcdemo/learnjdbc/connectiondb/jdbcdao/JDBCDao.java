@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.support.JdbcDaoSupport;
 
 /**
  * JDBCDao
@@ -26,6 +27,7 @@ public class JDBCDao {
 	}
 
 	public int update(String sql) {
+		JdbcDaoSupport ds = null;
 		return jdbcop.update(sql);
 	}
 	

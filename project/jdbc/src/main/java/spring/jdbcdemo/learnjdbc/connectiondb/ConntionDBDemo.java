@@ -24,7 +24,7 @@ import spring.jdbcdemo.learnjdbc.connectiondb.jdbcdao.JDBCDao;
 public class ConntionDBDemo {
 
 	public static void main(String[] args) throws Exception {
-		txDemo();
+		jdbcTemplate();
 	}
 
 	/**

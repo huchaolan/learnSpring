@@ -27,7 +27,6 @@ public class JDBCDao {
 	}
 
 	public int update(String sql) {
-		JdbcDaoSupport ds = null;
 		return jdbcop.update(sql);
 	}
 	

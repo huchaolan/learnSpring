@@ -84,3 +84,7 @@ DBCMP数据源
 |removeAbandonedTimeout|300|泄露的链接可以被回收的超时值。
 |logAbandoned|false|标记昂Statement或连接被泄露时是否打印堆栈。
 
+HikariCP属性介绍
+|属性|默认值|说明|
+|----|-----|----|
+|autoCommit|true|

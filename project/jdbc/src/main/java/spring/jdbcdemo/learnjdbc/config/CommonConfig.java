@@ -2,6 +2,8 @@ package spring.jdbcdemo.learnjdbc.config;
 
 import javax.sql.DataSource;
 
+import com.zaxxer.hikari.HikariDataSource;
+
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.beans.factory.annotation.Value;
@@ -67,6 +69,15 @@ public class CommonConfig {
 		ds.setPassword(password);
 		ds.setInitialSize(15);
 		ds.setMaxTotal(20);
+		return ds;
+	}
+
+	public DataSource hiDataSource() {
+		HikariDataSource ds = new HikariDataSource();
+		ds.setJdbcUrl("jdbc:mysql://localhost:3306/springcloud_spell?characterEncoding=utf-8&userSSL=false&serverTimezone=Hongkong");
+		ds.setUsername(dbusername);
+		ds.setPassword(password);
+		ds.setDataSourceClassName("com.mysql.cj.jdbc.Driver");
 		return ds;
 	}
 }

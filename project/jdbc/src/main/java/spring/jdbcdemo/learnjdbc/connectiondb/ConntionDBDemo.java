@@ -24,7 +24,27 @@ import spring.jdbcdemo.learnjdbc.connectiondb.jdbcdao.JDBCDao;
 public class ConntionDBDemo {
 
 	public static void main(String[] args) throws Exception {
-		jdbcTemplate();
+		txSupport();
+	}
+
+	/**
+	 * 事务的支持
+	 */
+	private static void txSupport() throws Exception{
+		ApplicationContext context = new AnnotationConfigApplicationContext(CommonConfig.class);
+		DataSource ds = context.getBean("hiDataSource", DataSource.class);
+		Connection conn = ds.getConnection();
+		System.out.println("supportsTransactions"+conn.getMetaData().supportsTransactions()); 
+		System.out.println("supportsTransactionIsolationLevel0："+
+		conn.getMetaData().supportsTransactionIsolationLevel(0)); 
+		System.out.println("supportsTransactionIsolationLevel1："+
+		conn.getMetaData().supportsTransactionIsolationLevel(1)); 
+		System.out.println("supportsTransactionIsolationLevel2："+
+		conn.getMetaData().supportsTransactionIsolationLevel(2)); 
+		System.out.println("supportsTransactionIsolationLevel3："+
+		conn.getMetaData().supportsTransactionIsolationLevel(3)); 
+		System.out.println("supportsTransactionIsolationLevel4："+
+		conn.getMetaData().supportsTransactionIsolationLevel(4)); 
 	}
 
 	/**

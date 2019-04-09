@@ -17,6 +17,8 @@
 + 脏读(dirty read) A事务读取B事务尚未提交的更改数据，A事务读取的数据不能保证持久。
 + 不可重复读(unrepeatable read) A事务读取了B事务已经提交的更改数据。A事务应该读取B事务之前的数据
 + 幻象读(phantom read) A事务读取B事务提交的新增数据。
++ 第一类丢失更新 A事务撤销时把已经提交的B的事务的更新数据覆盖了
++ 第二类丢失更新 A事务覆盖B事务已经提交的数据
 
 **幻象读读到了其他已经提交事务的新增数据**，**不可重复读是指读到了已经提交事务的更改数据(更改或者删除)**
 不可重复读只用采取添加行级锁，阻止操作中的数据发生变化
@@ -39,3 +41,30 @@ SQL92定义了4个级别的事务隔离
 |READ COMMITED|N|Y|Y|N|N|Y|
 |REPEATABLE READ|N|N|Y|N|N|
 |SERIALIZABLE|N|N|N|N|N|
+
+### JDBC对事务的支持
+
+```java
+Connection conn = ds.getConnection();
+System.out.println("supportsTransactions:"+conn.getMetaData().supportsTransactions());//显式数据库是否支持事务
+System.out.println("supportsTransactionIsolationLevel1："+conn.getMetaData().supportsTransactionIsolationLevel(1));//是否支持事务级别
+```
+
+简单的事务提交
+
+```java
+Connection conn;
+try{
+    conn = DriverManager.getConnection();
+    conn.setAutoCommit(false);//关闭自动提交
+    conn.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+    Statement stmt = conn.createStatement();
+    //....
+    conn.commit();
+}catch(Exception e){
+    ...//处理异常
+    conn.rollback();
+}finally{
+    //
+}
+```

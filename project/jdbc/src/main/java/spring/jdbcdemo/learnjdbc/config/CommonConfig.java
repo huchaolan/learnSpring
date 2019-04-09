@@ -46,7 +46,7 @@ public class CommonConfig {
 	@Bean
 	public DataSourceTransactionManager transactionManager() {
 		DataSourceTransactionManager txmanager = new DataSourceTransactionManager();
-		txmanager.setDataSource(dataSource());
+		txmanager.setDataSource(hiDataSource());
 		return txmanager;
 	}
 
@@ -57,10 +57,10 @@ public class CommonConfig {
 
 	@Bean
 	public JdbcTemplate jdbcTemplate() {
-		return new JdbcTemplate(dataSource());
+		return new JdbcTemplate(hiDataSource());
 	}
 
-	@Bean(destroyMethod = CLOSE)
+	//@Bean(destroyMethod = CLOSE)
 	public DataSource dataSource() {
 		BasicDataSource ds = new BasicDataSource();
 		ds.setDriverClassName("com.mysql.cj.jdbc.Driver");
@@ -72,12 +72,13 @@ public class CommonConfig {
 		return ds;
 	}
 
+	@Bean
 	public DataSource hiDataSource() {
 		HikariDataSource ds = new HikariDataSource();
 		ds.setJdbcUrl("jdbc:mysql://localhost:3306/springcloud_spell?characterEncoding=utf-8&userSSL=false&serverTimezone=Hongkong");
 		ds.setUsername(dbusername);
 		ds.setPassword(password);
-		ds.setDataSourceClassName("com.mysql.cj.jdbc.Driver");
+		ds.setDriverClassName("com.mysql.cj.jdbc.Driver");
 		return ds;
 	}
 }

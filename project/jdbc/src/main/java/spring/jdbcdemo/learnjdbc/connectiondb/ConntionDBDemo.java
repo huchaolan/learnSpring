@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.transaction.TransactionStatus;
@@ -24,6 +25,7 @@ import spring.jdbcdemo.learnjdbc.service.AOPDemoServcie;
  * ConntionDBDemo
  */
 public class ConntionDBDemo {
+
 
 	public static void main(String[] args) throws Exception {
 		txupdate();

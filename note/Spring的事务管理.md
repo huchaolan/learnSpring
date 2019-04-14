@@ -124,3 +124,38 @@ Spring在TransactionDefinition接口定义了7种类型的事务传播行为
 |PROPAGATION_NOT_SUPPORTED|以非事务方式执行，如果当前存在事务，则挂起当前事务|
 |PROPAGATION_NEVER|以非事务方式执行，如果当前存在事务，则抛异常|
 |PROPAGATION_NESTED|如果当前存在事务，则在嵌套事务内执行，如果没有当前事务，则执行PROPAGATION_REQUIRED类似操作|
+
+### 编程式的事务管理
+
+很少需要通过编程来进行事务管理。Spring也提供了模板类满足特殊场合的需要，`org.springframework.transaction.support.TransactionTemplate`。它式线程安全的可以在多个业务类中共享TransactionTemplate实例进行事务管理。
+
+```java
+TransactionTemplate tt = context.getBean("transactionTemplate", TransactionTemplate.class);
+tt.execute(new TransactionCallbackWithoutResult() {
+    @Override
+    protected void doInTransactionWithoutResult(TransactionStatus status) {
+        JDBCDao dao = context.getBean("jdbcDao", JDBCDao.class);
+        try{
+            int i = dao.update("update product_info f set f.product_stock = 50"
+                + " where f.product_stock = 67");
+            System.out.println("i>>>"+i);
+        }catch(Exception e){
+            e.printStackTrace();
+            status.setRollbackOnly();//调用status对象的setRollbackOnly()方法告知事务管理器当前事务需要回滚
+        }
+    }
+})
+```
+
+在回调接口方法中需要显式访问底层数据连接，则必须通过资源获取工具类得到线程绑定的数据连接。
+
+### 使用XML配置声明式事务
+
+声明式事务对代码的入侵性最小，可以让事务管理代码完全从业务代码中移除。Spring中声明事务通过SpringAOP实现的，Spring复制将事务管理增强逻辑动态织入业务方法的相应连接点中(线程绑定资源，开始事务，提交/回滚事务，进行异常转换和处理)
+
+声明式事务:
+
+1. TransactionProxyFactoryBean(不推荐)
+2. 基于aop/tx命名空间的配置(xml配置)
+3. 注解配置声明式事务(常用)
+

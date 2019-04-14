@@ -11,12 +11,14 @@ import javax.sql.DataSource;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.interceptor.TransactionInterceptor;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import spring.jdbcdemo.learnjdbc.bean.ProductInfo;
 import spring.jdbcdemo.learnjdbc.config.CommonConfig;
 import spring.jdbcdemo.learnjdbc.connectiondb.jdbcdao.JDBCDao;
+import spring.jdbcdemo.learnjdbc.service.AOPDemoServcie;
 
 /**
  * ConntionDBDemo
@@ -24,9 +26,24 @@ import spring.jdbcdemo.learnjdbc.connectiondb.jdbcdao.JDBCDao;
 public class ConntionDBDemo {
 
 	public static void main(String[] args) throws Exception {
-		txSupport();
+		txupdate();
 	}
 
+	private static void txupdate() {
+		TransactionInterceptor t = null;
+		ApplicationContext context = new AnnotationConfigApplicationContext(CommonConfig.class);
+		AOPDemoServcie aopDemoService = context.getBean("aopDemoServcie",AOPDemoServcie.class);
+		aopDemoService.testRollBack();
+	}
+
+	/**
+	 * AOPDemo
+	 */
+	private static void aoptxtest() {
+		ApplicationContext context = new AnnotationConfigApplicationContext(CommonConfig.class);
+		AOPDemoServcie aopDemoService = context.getBean("aopDemoServcie",AOPDemoServcie.class);
+		System.out.println(aopDemoService.getProduct().size());
+	}
 	/**
 	 * 事务的支持
 	 */
@@ -59,14 +76,14 @@ public class ConntionDBDemo {
 			protected void doInTransactionWithoutResult(TransactionStatus status) {
 				JDBCDao dao = context.getBean("jdbcDao", JDBCDao.class);
 				try{
-					int i = dao.update("update product_info f set f.product_stock = 50 where f.product_stock = 67");
+					int i = dao.update("update product_info f set f.product_stock = "
+									 + "50 where f.product_stock = 67");
 					System.out.println("i>>>"+i);
 				}catch(Exception e){
 					e.printStackTrace();
 					status.setRollbackOnly();//调用status对象的setRollbackOnly()方法告知事务管理器当前事务需要回滚
 				}
 			}
-			
 		});
 	}
 	/**

@@ -35,6 +35,10 @@ public class AOPDemoServcie {
 		return jdao.update(sql);
 	}
 
+	public void init(List<ProductInfo> list) {
+		jdao.forTest(list);
+	}
+
 	public void testRollBack() {
 		jdao.update("update product_info f set f.product_name = 'wer' where f.product_id = '157875196366160022' ");
 		jdao.update("update product_info f set f.product_price = 'aaa' where f.product_price = aaa");

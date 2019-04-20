@@ -1,13 +1,21 @@
 package spring.jdbcdemo.learnjdbc.connectiondb;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
+import java.util.Set;
+import java.util.UUID;
 
 import javax.sql.DataSource;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -28,7 +36,49 @@ public class ConntionDBDemo {
 
 
 	public static void main(String[] args) throws Exception {
-		txupdate();
+		filldata();
+	}
+
+	private static void filldata() {
+		ApplicationContext context = new AnnotationConfigApplicationContext(CommonConfig.class);
+		AOPDemoServcie aopDemoService = context.getBean("aopDemoServcie",AOPDemoServcie.class);
+		Set<String> uuid = new HashSet<>();
+		long start1 = System.currentTimeMillis();
+		Random r = new Random();
+		for(;uuid.size()<=100000;){
+			String s = UUID.randomUUID().toString().replaceAll("-", "");
+			if(!uuid.contains(s)){
+				uuid.add(s);
+			}else{
+				System.out.println(s);
+			}
+			System.out.println(uuid.size());
+		}
+		System.out.println(System.currentTimeMillis()-start1);
+		Iterator<String> it = uuid.iterator();
+		List<ProductInfo> list = new ArrayList<>();
+		for(int n=0;n<10;n++){
+			for(int i = 0;i<10000;i++) {
+				ProductInfo p = new ProductInfo();
+				if(!it.hasNext()) break;
+				p.setProductId(it.next());
+				p.setProductName(p.getProductId());
+				p.setProductDescription(p.getProductId());
+				p.setProductPrice(BigDecimal.valueOf(r.nextInt(10000)));
+				p.setProductStock(r.nextInt());
+				p.setProductIcon(RandomStringUtils.random(10));
+				p.setProductStatus(r.nextInt(10));
+				p.setCategoryType(r.nextInt());
+				list.add(p);
+			}
+			long start = System.currentTimeMillis();
+			aopDemoService.init(list);
+			System.out.println(System.currentTimeMillis()-start);
+			list.clear();
+		}
+		long start = System.currentTimeMillis();
+		aopDemoService.init(list);
+		System.out.println(System.currentTimeMillis()-start);
 	}
 
 	private static void txupdate() {

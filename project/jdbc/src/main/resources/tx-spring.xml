@@ -13,6 +13,7 @@
 	http://www.springframework.org/schema/tx
 	http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
 
+	<aop:aspectj-autoproxy />
 	<aop:config>
 		<aop:pointcut id="serviceMethod" expression="execution(* spring.jdbcdemo.learnjdbc.service.*.*(..))" />
 		<aop:advisor pointcut-ref="serviceMethod" advice-ref="txAdvice" />
@@ -20,7 +21,7 @@
 
 	<tx:advice id="txAdvice" transaction-manager="txManager">
 		<tx:attributes>
-			<tx:method name="get*" read-only="false" />
+			<tx:method name="get*" read-only="true" />
 			<tx:method name="update*" rollback-for="Exception" />
 			<tx:method name="test*" rollback-for="Exception" />
 		</tx:attributes>

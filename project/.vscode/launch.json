@@ -2,6 +2,13 @@
 	"configurations": [
 		{
 			"type": "java",
+			"name": "CodeLens (Launch) - RollBackDemo",
+			"request": "launch",
+			"mainClass": "spring.jdbcdemo.learnjdbc.connectiondb.RollBackDemo",
+			"projectName": "learnjdbc"
+		},
+		{
+			"type": "java",
 			"name": "CodeLens (Launch) - ConntionDBDemo",
 			"request": "launch",
 			"mainClass": "spring.jdbcdemo.learnjdbc.connectiondb.ConntionDBDemo",

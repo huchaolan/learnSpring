@@ -155,7 +155,66 @@ tt.execute(new TransactionCallbackWithoutResult() {
 
 声明式事务:
 
-1. TransactionProxyFactoryBean(不推荐)
-2. 基于aop/tx命名空间的配置(xml配置)
-3. 注解配置声明式事务(常用)
++ TransactionProxyFactoryBean(不推荐)
++ 基于aop/tx命名空间的配置(xml配置)
 
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context-4.0.xsd
+    http://www.springframework.org/schema/aop
+    http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+    http://www.springframework.org/schema/tx
+    http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
+
+    <aop:aspectj-autoproxy />
+    <aop:config>
+        <aop:pointcut id="serviceMethod" expression="execution(* spring.jdbcdemo.learnjdbc.service.*.*(..))" />
+        <aop:advisor pointcut-ref="serviceMethod" advice-ref="txAdvice" />
+    </aop:config>
+
+    <tx:advice id="txAdvice" transaction-manager="txManager">
+        <tx:attributes>
+            <tx:method name="get*" read-only="true" />
+            <tx:method name="update*" rollback-for="Exception" />
+            <tx:method name="test*" rollback-for="Exception" />
+        </tx:attributes>
+    </tx:advice>
+</beans>
+```
+
+Spring的事务模块支持以aop切面的形式来调用事务的方法，提供了tx:advice配置
+tx:advice元素有两个属性id和transaction-manager
+id是用在aop配置中，当调用方法时，aop会根据id获取对应的aop配置
+transaction-manager是事务管理器，在aop会从它那里获取事务
+
+tx:method元素配置哪些方法配置需要由事务切面调用和该方法执行的事务的相关属性
+
+|属性|是否必需|默认值|描述|
+|----|-------|------|----|
+|name|是|与事务属性关联的方法名，可以使用通配符|get*，on*Event|
+|propagation|否|REQUIRED|事务传播|
+|isolation|否|DEFAULT|隔离级别
+|timeout|否|-1|事务超时的时间，-1由底层事务系统决定|
+|read-only|否|false|事务是否只读|
+|rollback-for|否|运行异常回滚|触发事务回滚的Exception，多个异常用逗号分隔|
+|no-rollback-for|否|所有检查型异常不会滚|参考上一行|
+
++ 注解配置声明式事务(常用)
+
+@Transactional可以修饰类和方法上，如果两者都修饰了，方法上的配置会覆盖类上的配置。
+
+开启事务注解
+
+```xml
+<tx:annotaion-driven transaction-manager="txManager">
+```
+
+注解属性和xml配置类似，多了rollbackForClassName和noRollbackForClassName可以直接填写异常类

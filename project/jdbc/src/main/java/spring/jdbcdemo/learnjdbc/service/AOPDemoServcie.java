@@ -40,7 +40,7 @@ public class AOPDemoServcie {
 	}
 
 	public void testRollBack() {
-		jdao.update("update product_info f set f.product_name = 'wer' where f.product_id = '157875196366160022' ");
+		jdao.update("update product_info f set f.product_name = 'rrr' where f.product_id = 'e64fbbdeca234bbd8e47133c6a2b3fa9' ");
 		jdao.update("update product_info f set f.product_price = 'aaa' where f.product_price = aaa");
 	}
 }
